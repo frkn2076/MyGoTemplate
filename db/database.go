@@ -2,13 +2,14 @@ package db
 
 import (
 	"app/MyGoTemplate/logger"
+	"app/MyGoTemplate/db/entities"
 	
 	"gorm.io/driver/mysql"
 	"database/sql"
 	"gorm.io/gorm"
 	"context"
 	"time"
-	// _ "github.com/go-sql-driver/mysql"
+	"os"
 )
 
 var DB *sql.DB = initDB()
@@ -20,8 +21,8 @@ func initDB() *sql.DB {
 	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db")
 
 	if err != nil {
-		logger.ErrorLog("An error occured while database connection is establishing")
-		logger.ErrorLog(err.Error())
+		logger.ErrorLog("An error occured while database connection is establishing" + err.Error())
+		os.Exit(0)
 	}
 
 	//Ping for 2 seconds
@@ -47,6 +48,9 @@ func initGormDB() *gorm.DB{
 	if err != nil {
 		logger.ErrorLog("An error occured while gorm driver is establishing: " + err.Error())
 	}
+
+	//Migrations
+	gormDB.AutoMigrate(&entities.User{}, &entities.Login{})
 	
 	return gormDB
 }

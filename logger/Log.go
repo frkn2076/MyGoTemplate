@@ -9,6 +9,7 @@ import (
 
 var info *log.Logger = initLogger("InfoLog")
 var error *log.Logger = initLogger("ErrorLog")
+var serviceLog *log.Logger = initLogger("ServiceLog")
 
 
 func ErrorLog(logText string) {
@@ -18,6 +19,11 @@ func ErrorLog(logText string) {
 func InfoLog(logText string) {
 	info.Println(logText)
 }
+
+func ServiceLog(logText string) {
+	serviceLog.Println(logText)
+}
+
 
 //#region helper/unexporteds
 
@@ -30,7 +36,7 @@ func initLogger(folderName string) *log.Logger {
 		log.Fatal(err)
 	}
 
-	logger := log.New(file, "prefix", log.LstdFlags)
+	logger := log.New(file, "prefix: ", log.LstdFlags)
 	logger.Println(fmt.Sprintf("%s has created", folderName))
 	return logger
 }
