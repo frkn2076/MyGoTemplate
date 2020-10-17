@@ -19,7 +19,7 @@ func InfoLog(logText string) {
 	info.Println(logText)
 }
 
-//#region Unexporteds
+//#region helper/unexporteds
 
 func initLogger(folderName string) *log.Logger {
 	dt := time.Now()
@@ -35,4 +35,4 @@ func initLogger(folderName string) *log.Logger {
 	return logger
 }
 
-//#endregion Exported
+//#endregion helper/unexporteds
