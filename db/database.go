@@ -1,27 +1,27 @@
 package db
 
 import (
-    "database/sql"
 	"app/MyGoTemplate/logger"
+	
+	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var DB *sql.DB
+var DB *sql.DB = initDB()
 
-func Connect() error {
-    var err error
-    
-	DB, err = sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db")
+func initDB() *sql.DB {
+	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db")
 
-    if err != nil {
+	if err != nil {
 		logger.ErrorLog("An error occured while database connection is establishing")
-        return err
-    }
-    if err = DB.Ping(); err != nil {
-        return err
+		logger.ErrorLog(err.Error())
+	}
+	if err = db.Ping(); err != nil {
+		logger.ErrorLog("An error occured while ping")
+		logger.ErrorLog(err.Error())
 	}
 	logger.InfoLog("Database connection is opened")
-    Init()
-    logger.InfoLog("Init sql script has runned")
-    return nil
+	InitScripts(db)
+	logger.InfoLog("Init sql script has runned")
+	return db
 }

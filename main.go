@@ -1,26 +1,15 @@
 package main
 
 import (
-	"app/MyGoTemplate/db"
-	"app/MyGoTemplate/logger"
+	_ "app/MyGoTemplate/db"
+	_ "app/MyGoTemplate/logger"
 
 
 	"github.com/gofiber/fiber"
-	// "github.com/gofiber/fiber/middleware"
-	"log"
+
 )
 
 func main() {
-
-	// //Init logger
-	// logger.Inıt()
-
-	logger.InfoLog("asdsd")
-
-	// Connect to database
-	if err := db.Connect(); err != nil {
-		log.Fatal(err)
-	  }
 
 	// call the New() method - used to instantiate a new Fiber App
 	app := fiber.New()
