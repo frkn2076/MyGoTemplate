@@ -11,7 +11,6 @@ var info *log.Logger = initLogger("InfoLog")
 var error *log.Logger = initLogger("ErrorLog")
 var serviceLog *log.Logger = initLogger("ServiceLog")
 
-
 func ErrorLog(logText string) {
 	error.Println(logText)
 }
