@@ -23,7 +23,7 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 		//#region RequestLog
 
 		body, _ := ioutil.ReadAll(c.Request.Body)
-		logger.ServiceLog(c.Request.RequestURI + " " + string(body))
+		logger.ServiceLog("Request: " + c.Request.RequestURI + " " + string(body))
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
 
 		//#endregion RequestLog
@@ -35,7 +35,7 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 		c.Writer = bodyLogWriter
 		c.Next()
 		responseBody := bodyLogWriter.body.String()
-		logger.ServiceLog(string(responseBody))
+		logger.ServiceLog("Response: " + string(responseBody))
 
 		//#endregion ResponseLog
     }
