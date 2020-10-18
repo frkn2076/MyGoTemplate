@@ -31,7 +31,7 @@ func initDB() *sql.DB {
     if err = db.PingContext(ctx); err != nil {
 		logger.ErrorLog("An error occured while ping: " + err.Error())
 	}
-	
+
 	logger.InfoLog("Database connection is opened")
 	InitScripts(db)
 	logger.InfoLog("Init sql script has runned")
@@ -51,7 +51,7 @@ func initGormDB() *gorm.DB{
 
 	//Migrations
 	gormDB.AutoMigrate(&entities.User{}, &entities.Login{})
-	
+
 	return gormDB
 }
 

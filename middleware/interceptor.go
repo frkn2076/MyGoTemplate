@@ -1,9 +1,10 @@
 package middleware
 
 import(
+	"app/MyGoTemplate/logger"
+
 	"github.com/gin-gonic/gin"
 
-	"fmt"
 	"bytes"
 	"io/ioutil"
 )
@@ -19,13 +20,23 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 
 func ServiceLogMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
+		//#region RequestLog
+
 		body, _ := ioutil.ReadAll(c.Request.Body)
-		println(string(body))
+		logger.ServiceLog(c.Request.RequestURI + " " + string(body))
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
+
+		//#endregion RequestLog
+
+
+		//#region ResponseLog
+
 		bodyLogWriter := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = bodyLogWriter
 		c.Next()
 		responseBody := bodyLogWriter.body.String()
-		fmt.Println(responseBody)
+		logger.ServiceLog(string(responseBody))
+
+		//#endregion ResponseLog
     }
 }

@@ -1,7 +1,6 @@
 package controllers
 
 import(
-	// "encoding/json"
 	"app/MyGoTemplate/db"
 	"app/MyGoTemplate/controllers/models"
 	"app/MyGoTemplate/db/entities"
@@ -9,9 +8,9 @@ import(
 	"github.com/gin-gonic/gin"
 )
 
-type UserController struct{}
+type LoginController struct{}
 
-func (u *UserController) Login(c *gin.Context) {
+func (u *LoginController) Login(c *gin.Context) {
 	var loginRequest models.LoginRequest
 	if err := c.Bind(&loginRequest); err != nil {
 		c.JSON(400, err)
@@ -32,7 +31,7 @@ func (u *UserController) Login(c *gin.Context) {
 	})
 }
 
-func (u *UserController) Register(c *gin.Context) {
+func (u *LoginController) Register(c *gin.Context) {
 	// var login Login
 	// err := json.NewDecoder(c.Body).Decode(&login)
 
