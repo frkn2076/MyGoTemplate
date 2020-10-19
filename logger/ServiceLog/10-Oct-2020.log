@@ -19,3 +19,112 @@ prefix: 2020/10/18 19:48:26 /login/login {
     "password":"asd"
 }
 prefix: 2020/10/18 19:48:26 "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/18 20:11:56 ServiceLog has created
+prefix: 2020/10/18 20:12:01 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/18 20:12:01 Response: "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/18 20:25:34 ServiceLog has created
+prefix: 2020/10/18 20:25:41 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/18 20:25:41 Response: "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/18 20:30:48 ServiceLog has created
+prefix: 2020/10/18 20:30:54 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/18 20:30:54 Response: "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/18 22:04:18 ServiceLog has created
+prefix: 2020/10/18 22:04:41 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/18 22:04:41 Response: "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/18 22:04:59 ServiceLog has created
+prefix: 2020/10/18 22:05:17 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/18 22:05:17 Response: "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/18 22:06:22 ServiceLog has created
+prefix: 2020/10/18 22:06:30 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/18 22:06:30 Response: "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/19 21:33:51 ServiceLog has created
+prefix: 2020/10/19 21:33:59 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/19 21:33:59 Response: "This user already exists. Please check your User Name and Email"
+prefix: 2020/10/19 21:34:40 Request: /login/login {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/19 21:34:40 Response: {"isSuccess":""}
+prefix: 2020/10/19 21:58:15 ServiceLog has created
+prefix: 2020/10/19 22:05:20 ServiceLog has created
+prefix: 2020/10/19 22:05:46 Request: / 
+prefix: 2020/10/19 22:05:46 Response: 
+prefix: 2020/10/19 22:05:46 Request: /favicon.ico 
+prefix: 2020/10/19 22:05:46 Response: 
+prefix: 2020/10/19 22:05:58 Request: / {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/19 22:05:58 Response: 
+prefix: 2020/10/19 22:09:41 Request: /ws {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/19 22:09:41 Response: Bad Request
+
+prefix: 2020/10/19 22:09:43 Request: / {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/19 22:09:43 Response: 
+prefix: 2020/10/19 22:09:44 Request: / {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/19 22:09:44 Response: 
+prefix: 2020/10/19 22:09:45 Request: / {
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}
+prefix: 2020/10/19 22:09:45 Response: 
+prefix: 2020/10/19 22:18:57 ServiceLog has created
+prefix: 2020/10/19 22:20:00 ServiceLog has created
+prefix: 2020/10/19 22:24:35 ServiceLog has created
+prefix: 2020/10/19 22:29:41 ServiceLog has created
+prefix: 2020/10/19 22:31:24 ServiceLog has created
+prefix: 2020/10/19 22:41:25 ServiceLog has created
+prefix: 2020/10/19 22:45:41 ServiceLog has created
+prefix: 2020/10/19 22:52:10 ServiceLog has created
+prefix: 2020/10/19 23:41:03 ServiceLog has created
+prefix: 2020/10/19 23:42:43 ServiceLog has created
+prefix: 2020/10/19 23:45:37 ServiceLog has created
+prefix: 2020/10/19 23:47:05 ServiceLog has created
+prefix: 2020/10/19 23:47:56 ServiceLog has created
+prefix: 2020/10/19 23:48:20 ServiceLog has created
+prefix: 2020/10/19 23:49:26 ServiceLog has created
+prefix: 2020/10/19 23:50:52 ServiceLog has created
+prefix: 2020/10/19 23:52:15 ServiceLog has created

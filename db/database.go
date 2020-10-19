@@ -18,10 +18,10 @@ var GormDB *gorm.DB = initGormDB()
 //#region helper/unexporteds
 
 func initDB() *sql.DB {
-	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db")
-
+	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db");
+	
 	if err != nil {
-		logger.ErrorLog("An error occured while database connection is establishing" + err.Error())
+		logger.ErrorLog("An error occured while database connection is establishing ", err.Error())
 		os.Exit(0)
 	}
 
@@ -29,7 +29,7 @@ func initDB() *sql.DB {
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 2*time.Second)
     defer cancelfunc()
     if err = db.PingContext(ctx); err != nil {
-		logger.ErrorLog("An error occured while ping: " + err.Error())
+		logger.ErrorLog("An error occured while ping: ", err.Error())
 	}
 
 	logger.InfoLog("Database connection is opened")
@@ -46,7 +46,7 @@ func initGormDB() *gorm.DB{
 	  }), &gorm.Config{})
 	
 	if err != nil {
-		logger.ErrorLog("An error occured while gorm driver is establishing: " + err.Error())
+		logger.ErrorLog("An error occured while gorm driver is establishing: ", err.Error())
 	}
 
 	//Migrations

@@ -11,15 +11,15 @@ var info *log.Logger = initLogger("InfoLog")
 var error *log.Logger = initLogger("ErrorLog")
 var service *log.Logger = initLogger("ServiceLog")
 
-func ErrorLog(logText string) {
+func ErrorLog(logText ...interface{}) {
 	error.Println(logText)
 }
 
-func InfoLog(logText string) {
+func InfoLog(logText ...interface{}) {
 	info.Println(logText)
 }
 
-func ServiceLog(logText string) {
+func ServiceLog(logText ...interface{}) {
 	service.Println(logText)
 }
 
