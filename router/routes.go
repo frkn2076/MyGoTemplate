@@ -3,11 +3,9 @@ package router
 import (
 	"app/MyGoTemplate/middleware"
 	"app/MyGoTemplate/controllers"
+	// "app/MyGoTemplate/socket"
 
 	"github.com/gin-gonic/gin"
-	
-
-
 )
 
 func SetupRouter() *gin.Engine {
@@ -28,6 +26,11 @@ func SetupRouter() *gin.Engine {
 	// 	grp2.POST("send", message.SendMessage)
 	// 	grp2.GET("show", message.ShowMessage)
 	// }
+
+	// router.GET("/ws/:roomId", func(c *gin.Context) {
+	// 	roomId := c.Param("roomId")
+	// 	socket.ServeWs(c.Writer, c.Request, roomId)
+	//  })
 	
 	return router
 }

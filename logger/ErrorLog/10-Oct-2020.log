@@ -29,3 +29,29 @@ prefix: 2020/10/19 23:50:52 ErrorLog has created
 prefix: 2020/10/19 23:50:54 [An error occured while ping:  dial tcp 127.0.0.1:3306: i/o timeout]
 prefix: 2020/10/19 23:50:56 [An error occured while gorm driver is establishing:  dial tcp 127.0.0.1:3306: connectex: Hedef makine etkin olarak reddettiğinden bağlantı kurulamadı.]
 prefix: 2020/10/19 23:52:15 ErrorLog has created
+prefix: 2020/10/19 23:56:07 ErrorLog has created
+prefix: 2020/10/19 23:56:38 ErrorLog has created
+prefix: 2020/10/19 23:57:16 ErrorLog has created
+prefix: 2020/10/19 23:58:14 ErrorLog has created
+prefix: 2020/10/19 23:58:44 ErrorLog has created
+prefix: 2020/10/19 23:59:27 ErrorLog has created
+prefix: 2020/10/20 00:00:21 ErrorLog has created
+prefix: 2020/10/20 00:00:21 [Socket listening error: listen tcp: lookup tcp/8081/ws: getaddrinfow: Belirtilen sınıf bulunamadı.]
+prefix: 2020/10/20 00:00:37 ErrorLog has created
+prefix: 2020/10/20 00:03:19 ErrorLog has created
+prefix: 2020/10/20 00:03:19 [Socket connecting error:  accept tcp 127.0.0.1:5050: use of closed network connection]
+prefix: 2020/10/20 00:04:22 ErrorLog has created
+prefix: 2020/10/20 00:05:58 ErrorLog has created
+prefix: 2020/10/20 00:07:50 ErrorLog has created
+prefix: 2020/10/20 00:12:23 ErrorLog has created
+prefix: 2020/10/20 00:14:34 ErrorLog has created
+prefix: 2020/10/20 22:10:10 ErrorLog has created
+prefix: 2020/10/20 22:11:09 [Socket listening error: listen tcp 127.0.0.1:8080: bind: Normal olarak her yuva adresi (iletişim kuralı/ağ adresi/bağlantı noktası) için yalnızca bir kullanıma izin veriliyor.]
+prefix: 2020/10/20 22:11:32 ErrorLog has created
+prefix: 2020/10/20 22:13:19 ErrorLog has created
+prefix: 2020/10/20 22:14:06 ErrorLog has created
+prefix: 2020/10/20 22:16:58 ErrorLog has created
+prefix: 2020/10/20 22:30:57 ErrorLog has created
+prefix: 2020/10/20 22:31:57 ErrorLog has created
+prefix: 2020/10/20 23:00:49 ErrorLog has created
+prefix: 2020/10/20 23:10:23 ErrorLog has created
