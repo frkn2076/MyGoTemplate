@@ -1,0 +1,13 @@
+prefix: 2020/10/21 21:06:10 ServiceLog has created
+prefix: 2020/10/21 21:15:15 [Request:  /login/login   ""{
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}""]
+prefix: 2020/10/21 21:15:15 [Response:  {"Value":"string","Type":{},"Offset":2,"Struct":"","Field":""}]
+prefix: 2020/10/21 21:15:27 [Request:  /login/logi   ""{
+    "username":"Furkan",
+    "email":"asda",
+    "password":"asd"
+}""]
+prefix: 2020/10/21 21:15:27 [Response:  ]

@@ -28,15 +28,22 @@ func ServiceLog(logText ...interface{}) {
 
 func initLogger(folderName string) *log.Logger {
 	dt := time.Now()
-	today := dt.Format("01-Jan-2006")
+	today := dt.Format("02-Jan-2006")
 	fileName := fmt.Sprintf("logger/%s/%s.log", folderName, today)
+	
+	//check log file created before
+	_, err := os.Stat(fileName)
+	fileNotExist := os.IsNotExist(err)
+	
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	logger := log.New(file, "prefix: ", log.LstdFlags)
-	logger.Println(fmt.Sprintf("%s has created", folderName))
+	if(fileNotExist){
+		logger.Println(fmt.Sprintf("%s has created", folderName))
+	}
 	return logger
 }
 

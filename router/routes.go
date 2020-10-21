@@ -3,7 +3,7 @@ package router
 import (
 	"app/MyGoTemplate/middleware"
 	"app/MyGoTemplate/controllers"
-	// "app/MyGoTemplate/socket"
+	"app/MyGoTemplate/socket"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,16 +21,16 @@ func SetupRouter() *gin.Engine {
 		grp1.POST("register", user.Register)
 	}
 
-	// grp2 := router.Group("/socket")
-	// {
-	// 	grp2.POST("send", message.SendMessage)
-	// 	grp2.GET("show", message.ShowMessage)
-	// }
+	router.LoadHTMLFiles("socket/index.html")
 
-	// router.GET("/ws/:roomId", func(c *gin.Context) {
-	// 	roomId := c.Param("roomId")
-	// 	socket.ServeWs(c.Writer, c.Request, roomId)
-	//  })
+	router.GET("/room/:roomId", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
+
+	router.GET("/ws/:roomId", func(c *gin.Context) {
+		roomId := c.Param("roomId")
+		socket.ServeWs(c.Writer, c.Request, roomId)
+	})
 	
 	return router
 }
