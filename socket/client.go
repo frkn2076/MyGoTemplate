@@ -1,7 +1,7 @@
 package socket
 
 import (
-	"fmt"
+	// "fmt"
 	"log"
 	"net/http"
 	"time"
@@ -58,6 +58,7 @@ func (s subscription) readPump() {
 			break
 		}
 		m := message{msg, s.room}
+		logger.ChatLog("Room:", s.room, "	Message:", string(msg))
 		H.broadcast <- m
 	}
 }
@@ -85,9 +86,7 @@ func (s *subscription) writePump() {
 			}
 			if err := c.write(websocket.TextMessage, message); err != nil {
 				return
-			} else {
-				logger.ChatLog("Room:", websocket.TextMessage, "	Message:", string(message))
-			}
+			} 
 		case <-ticker.C:
 			if err := c.write(websocket.PingMessage, []byte{}); err != nil {
 				return
@@ -98,7 +97,6 @@ func (s *subscription) writePump() {
 
 // serveWs handles websocket requests from the peer.
 func ServeWs(w http.ResponseWriter, r *http.Request, roomId string) {
-	fmt.Print(roomId)
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err.Error())

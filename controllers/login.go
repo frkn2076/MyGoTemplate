@@ -4,6 +4,7 @@ import(
 	"app/MyGoTemplate/db"
 	"app/MyGoTemplate/controllers/models"
 	"app/MyGoTemplate/db/entities"
+	s "app/MyGoTemplate/session"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +26,17 @@ func (u *LoginController) Login(c *gin.Context) {
 		c.JSON(400, "This user already exists. Please check your User Name and Email")
 		return
 	}
+
+	session, _ := s.Store.Get(c.Request, "cookie-name")
+
+	user := &s.User{
+		Username:      loginRequest.UserName,
+		Authenticated: true,
+	}
+
+	session.Values["user"] = user
+
+	_ = session.Save(c.Request, c.Writer)
 
 	c.JSON(200, gin.H{
 		"isSuccess": loginRequest.UserName,
