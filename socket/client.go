@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"app/MyGoTemplate/logger"
+	
 	"github.com/gorilla/websocket"
 )
 
@@ -83,6 +85,8 @@ func (s *subscription) writePump() {
 			}
 			if err := c.write(websocket.TextMessage, message); err != nil {
 				return
+			} else {
+				logger.ChatLog("Room:", websocket.TextMessage, "	Message:", string(message))
 			}
 		case <-ticker.C:
 			if err := c.write(websocket.PingMessage, []byte{}); err != nil {

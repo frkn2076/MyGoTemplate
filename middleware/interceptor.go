@@ -1,12 +1,12 @@
 package middleware
 
 import(
+	"bytes"
+	"io/ioutil"
+
 	"app/MyGoTemplate/logger"
 
 	"github.com/gin-gonic/gin"
-
-	"bytes"
-	"io/ioutil"
 )
 
 type bodyLogWriter struct {

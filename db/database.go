@@ -1,15 +1,16 @@
 package db
 
 import (
+	"os"
+	"time"
+	"context"
+	"database/sql"
+
 	"app/MyGoTemplate/logger"
 	"app/MyGoTemplate/db/entities"
 	
 	"gorm.io/driver/mysql"
-	"database/sql"
 	"gorm.io/gorm"
-	"context"
-	"time"
-	"os"
 )
 
 var DB *sql.DB = initDB()

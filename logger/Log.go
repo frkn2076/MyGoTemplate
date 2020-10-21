@@ -10,6 +10,7 @@ import (
 var info *log.Logger = initLogger("InfoLog")
 var error *log.Logger = initLogger("ErrorLog")
 var service *log.Logger = initLogger("ServiceLog")
+var chat *log.Logger = initLogger("ChatLog")
 
 func ErrorLog(logText ...interface{}) {
 	error.Println(logText)
@@ -21,6 +22,10 @@ func InfoLog(logText ...interface{}) {
 
 func ServiceLog(logText ...interface{}) {
 	service.Println(logText)
+}
+
+func ChatLog(logText ...interface{}) {
+	chat.Println(logText)
 }
 
 

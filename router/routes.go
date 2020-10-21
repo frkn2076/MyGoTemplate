@@ -21,6 +21,7 @@ func SetupRouter() *gin.Engine {
 		grp1.POST("register", user.Register)
 	}
 
+	//User interface to demo
 	router.LoadHTMLFiles("socket/index.html")
 
 	router.GET("/room/:roomId", func(c *gin.Context) {
