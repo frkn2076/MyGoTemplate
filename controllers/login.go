@@ -29,12 +29,8 @@ func (u *LoginController) Login(c *gin.Context) {
 
 	session, _ := s.Store.Get(c.Request, "cookie-name")
 
-	user := &s.User{
-		Username:      loginRequest.UserName,
-		Authenticated: true,
-	}
-
-	session.Values["user"] = user
+	session.Values["userName"] = loginRequest.UserName
+	session.Values["authenticated"] = true
 
 	_ = session.Save(c.Request, c.Writer)
 

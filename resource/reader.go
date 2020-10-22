@@ -6,6 +6,7 @@ import(
 	"encoding/xml"
 
 	"app/MyGoTemplate/logger"
+	_ "app/MyGoTemplate/cache"
 )
 
 var Items []Item = loadItems()

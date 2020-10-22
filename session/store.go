@@ -1,14 +1,10 @@
 package session
 
-import(
+import (
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 )
 
-type User struct {
-	Username      string
-	Authenticated bool
-}	
 
 // store will hold all session data
 var Store *sessions.CookieStore = initStore()
