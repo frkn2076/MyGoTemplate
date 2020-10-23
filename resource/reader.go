@@ -6,32 +6,32 @@ import(
 	"encoding/xml"
 
 	"app/MyGoTemplate/logger"
-	_ "app/MyGoTemplate/cache"
+	"app/MyGoTemplate/cache"
 )
 
-var Items []Item = loadItems()
-
-type Root struct {
-    XMLName xml.Name `xml:"Root"`
-    Items   []Item   `xml:"Item"`
-}
-
-type Item struct {
-	XMLName xml.Name `xml:"Item"`
-    Key   string `xml:"Key,attr"`
-    Value string `xml:"Value,attr"`
-}
+var isFirstCall bool = true
 
 func GetValue(key string) string {
-	for _, item := range Items {
-		if(item.Key == key){
-			return item.Value
-		}
+	value := cache.Get(key)
+	if(value != ""){
+		isFirstCall = true
+		return value
+	} else if(!isFirstCall){
+		return ""
+	} else {
+		isFirstCall = false
+		settingsCacheLoad()
+		return GetValue(key)
 	}
-	return ""
 }
 
-func loadItems() []Item {
+func init() {
+	settingsCacheLoad()
+}
+
+//#region Helper
+
+func settingsCacheLoad(){
 	xmlFile, err := os.Open("resource/settings.xml")
 	if err != nil {
 		logger.ErrorLog(err)
@@ -50,5 +50,25 @@ func loadItems() []Item {
 
 	xml.Unmarshal(byteValue, &root)
 
-	return root.Items
+	for _, item:= range root.Items{
+		cache.Set(item.Key, item.Value, -1)
+	}
 }
+
+//#endregion
+
+
+//#region Models
+
+type Root struct {
+    XMLName xml.Name `xml:"Root"`
+    Items   []Item   `xml:"Item"`
+}
+
+type Item struct {
+	XMLName xml.Name `xml:"Item"`
+    Key   string `xml:"Key,attr"`
+    Value string `xml:"Value,attr"`
+}
+
+//#endregion

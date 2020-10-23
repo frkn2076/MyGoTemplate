@@ -1,6 +1,6 @@
 package cache
 
-import(
+import (
 	"fmt"
 	"runtime/debug"
 	"time"
@@ -20,23 +20,28 @@ func loadCache() *freecache.Cache {
 	return cache
 } 
 
+//expireSeconds <= 0 means no expire
 func Set(key string, value string, expireDuration int){
 	cache.Set([]byte(key), []byte(value), expireDuration)
 }
 
 func Get(key string) string {
-	got, err := cache.Get([]byte(key))
+	value, err := cache.Get([]byte(key))
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(string(got))
+		fmt.Println(string(value))
 	}
-	return string(got)
+	return string(value)
 }
 
 func Delete(key string) {
 	affected := cache.Del([]byte(key))
 	fmt.Println("deleted key ", affected)
+}
+
+func Reset(){
+	cache.Clear()
 }
 
 func GetAvaregeAccessTime() int64 {

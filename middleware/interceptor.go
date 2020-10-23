@@ -3,6 +3,7 @@ package middleware
 import(
 	"bytes"
 	"io/ioutil"
+	// "net/http"
 
 	"app/MyGoTemplate/logger"
 
@@ -23,20 +24,33 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 		//#region RequestLog
 
 		body, _ := ioutil.ReadAll(c.Request.Body)
-		logger.ServiceLog("Request: ", c.Request.RequestURI, " ", string(body))
+		logger.ServiceLog("Request: ", c.Request.RequestURI, " IP: ", c.ClientIP(), " " , string(body))
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
 
-		//#endregion RequestLog
+		//#endregion
 
 
 		//#region ResponseLog
 
 		bodyLogWriter := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		
 		c.Writer = bodyLogWriter
-		c.Next()
+		
+		c.Next() // < the rest of handlers in the chain are executed here!
 		responseBody := bodyLogWriter.body.String()
 		logger.ServiceLog("Response: ", string(responseBody))
 
-		//#endregion ResponseLog
+		//#endregion
+
+
+		//#region ExceptionHandle
+
+		if(c.Writer.Status() == 500){
+			c.Writer.WriteString("Furkan")
+			// c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Message": "Unauthorized"})
+			return
+		}
+
+		//#endregion
     }
 }

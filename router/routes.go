@@ -14,7 +14,7 @@ func SetupRouter() *gin.Engine {
 
 	user := new(controllers.LoginController)
 	// message := new(controllers.MessageController)
-	report := new(controllers.ReportController)
+	manager := new(controllers.ManagerController)
 	
 	grp1 := router.Group("/login")
 	{
@@ -34,9 +34,10 @@ func SetupRouter() *gin.Engine {
 		socket.ServeWs(c.Writer, c.Request, roomId)
 	})
 
-	grp2 := router.Group("/report")
+	grp2 := router.Group("/manager")
 	{
-		grp2.GET("/all", report.GetAllReports)
+		grp2.GET("/reports", manager.GetAllReports)
+		grp2.GET("/clearCache", manager.ClearCache)
 	}
 	
 	return router
