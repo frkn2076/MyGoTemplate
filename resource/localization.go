@@ -1,0 +1,7 @@
+package resource
+
+
+
+func init(){
+	
+}

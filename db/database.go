@@ -19,7 +19,7 @@ var GormDB *gorm.DB = initGormDB()
 //#region helper/unexporteds
 
 func initDB() *sql.DB {
-	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db");
+	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db?charset=utf8");
 	
 	if err != nil {
 		logger.ErrorLog("An error occured while database connection is establishing ", err.Error())
@@ -34,8 +34,7 @@ func initDB() *sql.DB {
 	}
 
 	logger.InfoLog("Database connection is opened")
-	InitScripts(db)
-	logger.InfoLog("Init sql script has runned")
+	
 	return db
 }
 
@@ -51,9 +50,16 @@ func initGormDB() *gorm.DB{
 	}
 
 	//Migrations
-	gormDB.AutoMigrate(&entities.User{}, &entities.Login{})
+	gormDB.AutoMigrate(&entities.User{}, &entities.Login{}, &entities.Localization{})
+
+	// gormDB.Callback().Create().Before("gorm:create").Register("update_created_at", updateCreated)
+
+	InitScripts(DB)
+	logger.InfoLog("Init sql script has runned")
 
 	return gormDB
 }
+
+
 
 //#endregion helper/unexporteds

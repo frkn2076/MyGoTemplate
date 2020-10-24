@@ -15,12 +15,11 @@ type LoginController struct{}
 
 func (u *LoginController) Login(c *gin.Context) {
 
-	c.AbortWithStatus(500)
-	return
+	s.SessionSet("language", "TR");
 
 	var loginRequest request.LoginRequest
 	if err := c.Bind(&loginRequest); err != nil {
-		c.JSON(400, err)
+		c.AbortWithStatus(500)
 		return
 	}
 
@@ -34,10 +33,9 @@ func (u *LoginController) Login(c *gin.Context) {
 	}
 
 	s.SessionSet(c, "isActive", true)
-	s.SessionGet(c, "isActive")
 
 	c.JSON(200, gin.H{
-		"isSuccess": cache.Get("furkan") + cache.Get("cookie"),
+		"isSuccess": true,
 	})
 }
 

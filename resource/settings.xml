@@ -1,3 +1,4 @@
 <Root>
     <Item Key="cookie" Value="cookieName" />
+    <Item Key="cookie2" Value="cookieName1" />
 </Root>

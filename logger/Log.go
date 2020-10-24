@@ -11,6 +11,7 @@ var info *log.Logger = initLogger("InfoLog")
 var error *log.Logger = initLogger("ErrorLog")
 var service *log.Logger = initLogger("ServiceLog")
 var chat *log.Logger = initLogger("ChatLog")
+var transaction *log.Logger = initLogger("TransactionLog")
 
 func ErrorLog(logText ...interface{}) {
 	error.Println(logText)
@@ -26,6 +27,10 @@ func ServiceLog(logText ...interface{}) {
 
 func ChatLog(logText ...interface{}) {
 	chat.Println(logText)
+}
+
+func TransactionLog(logText ...interface{}) {
+	transaction.Println(logText)
 }
 
 

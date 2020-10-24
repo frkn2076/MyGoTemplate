@@ -1,11 +1,15 @@
 package entities
 
+import(
+	"gorm.io/gorm"
+)
+
 type Login struct {
-	Id       uint   `json:"id"`
-	UserName string `json:"username"`
-	Email	 string `json:"email"`
-	Password string `json:"password"`
-	// User     User   `json:"user" gorm:"foreignKey:Id"`
+	Id       uint   
+	UserName string 
+	Email	 string 
+	Password string 
+	gorm.Model
 }
 
 func (Login) TableName() string {

@@ -44,6 +44,12 @@ func Reset(){
 	cache.Clear()
 }
 
+//Gets value and deletes it
+func Flash(key string) string {
+	defer Delete(key)
+	return Get(key)
+}
+
 func GetAvaregeAccessTime() int64 {
 	return cache.AverageAccessTime() / int64(time.Millisecond)
 }

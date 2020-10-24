@@ -3,9 +3,10 @@ package middleware
 import(
 	"bytes"
 	"io/ioutil"
-	// "net/http"
+	"net/http"
 
 	"app/MyGoTemplate/logger"
+	"app/MyGoTemplate/controllers/models/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,9 +46,13 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 
 		//#region ExceptionHandle
 
+		// base := r.BaseResponse{
+		// 	IsSuccess: false,
+		// 	Message: "asdasd",
+		// }
+
 		if(c.Writer.Status() == 500){
-			c.Writer.WriteString("Furkan")
-			// c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Message": "Unauthorized"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response.SingletonBaseResponseInstance)
 			return
 		}
 
