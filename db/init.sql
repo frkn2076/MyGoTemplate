@@ -1,0 +1,2 @@
+INSERT IGNORE INTO Localization(resource, message, language) VALUES('GlobalErrorMessage', 'Geçici süre işleminizi gerçekleştiremiyoruz.', 'TR') ON DUPLICATE KEY UPDATE resource = VALUES(resource), message = VALUES(message), language = VALUES(language); 
+INSERT IGNORE INTO Localization(resource, message, language) VALUES('GlobalErrorMessage2', 'Geçici süre işleminizi asda.', 'TR') ON DUPLICATE KEY UPDATE resource = VALUES(resource), message = VALUES(message), language = VALUES(language);
