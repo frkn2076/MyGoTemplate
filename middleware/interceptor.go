@@ -38,24 +38,22 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 		c.Writer = bodyLogWriter
 		
 		c.Next() // < the rest of handlers in the chain are executed here!
+		
+		errorHandler(c)
+
 		responseBody := bodyLogWriter.body.String()
 		logger.ServiceLog("Response: ", string(responseBody))
 
 		//#endregion
-
-
-		//#region ExceptionHandle
-
-		// base := r.BaseResponse{
-		// 	IsSuccess: false,
-		// 	Message: "asdasd",
-		// }
-
-		if(c.Writer.Status() == 500){
-			c.AbortWithStatusJSON(http.StatusUnauthorized, response.SingletonBaseResponseInstance)
-			return
-		}
-
-		//#endregion
     }
+}
+
+func errorHandler(c *gin.Context) {
+	if(len(c.Errors) > 0){
+		c.AbortWithStatusJSON(http.StatusInternalServerError, &response.BaseResponse{IsSuccess: false,	Message: c.Errors[0].Error(),})
+		return
+	} else if(c.Writer.Status() < http.StatusOK || c.Writer.Status() > http.StatusIMUsed) {
+		c.AbortWithStatusJSON(c.Writer.Status(), &response.BaseResponse{IsSuccess: false,	Message: "Hizmet veremiyoruz"})
+		return
+	}
 }
