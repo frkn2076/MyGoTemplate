@@ -4,9 +4,12 @@ import(
 	"bytes"
 	"io/ioutil"
 	"net/http"
+	"fmt"
 
 	"app/MyGoTemplate/logger"
 	"app/MyGoTemplate/controllers/models/response"
+	"app/MyGoTemplate/cache"
+	s "app/MyGoTemplate/session"
 
 	"github.com/gin-gonic/gin"
 )
@@ -50,7 +53,14 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 
 func errorHandler(c *gin.Context) {
 	if(len(c.Errors) > 0){
-		c.AbortWithStatusJSON(http.StatusInternalServerError, &response.BaseResponse{IsSuccess: false,	Message: c.Errors[0].Error(),})
+		lang, err := s.SessionGet(c, "language")
+		if err != nil {
+			logger.ErrorLog("An error occured while using ", err.Error())
+		}
+		language := fmt.Sprintf("%v", lang)
+		key := c.Errors[0].Error() + language
+		errorMessage := cache.Get(key)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, &response.BaseResponse{IsSuccess: false,	Message: errorMessage})
 		return
 	} else if(c.Writer.Status() < http.StatusOK || c.Writer.Status() > http.StatusIMUsed) {
 		c.AbortWithStatusJSON(c.Writer.Status(), &response.BaseResponse{IsSuccess: false,	Message: "Hizmet veremiyoruz"})

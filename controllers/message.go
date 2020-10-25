@@ -1,15 +1,15 @@
 package controllers
 
-import (
-	// "app/MyGoTemplate/logger"
-	// "app/MyGoTemplate/socket"
+// import (
+// "app/MyGoTemplate/logger"
+// "app/MyGoTemplate/socket"
 
 // 	"bufio"
 // 	"io/ioutil"
 // 	"net"
 
 // 	"github.com/gin-gonic/gin"
- )
+//  )
 
 // const (
 //     connHost = "localhost"

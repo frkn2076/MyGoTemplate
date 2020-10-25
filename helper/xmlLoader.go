@@ -4,7 +4,6 @@ import(
 	"os"
 	"io/ioutil"
 	"encoding/xml"
-	// "fmt"
 
 	"app/MyGoTemplate/logger"
 )

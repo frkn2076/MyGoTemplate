@@ -1,12 +1,13 @@
 package controllers
 
-import(
-	"app/MyGoTemplate/db"
+import (
 	"app/MyGoTemplate/controllers/models/request"
+	"app/MyGoTemplate/db"
 	"app/MyGoTemplate/db/entities"
+	"app/MyGoTemplate/db/repo"
 	s "app/MyGoTemplate/session"
-	"app/MyGoTemplate/cache"
-	_ "app/MyGoTemplate/resource"
+	"app/MyGoTemplate/logger"
+	"app/MyGoTemplate/definedErrors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,35 +16,37 @@ type LoginController struct{}
 
 func (u *LoginController) Login(c *gin.Context) {
 
-	s.SessionSet("language", "TR");
+	session, _ := s.SessionSet(c, "language", "TR", nil)
 
 	var loginRequest request.LoginRequest
 	if err := c.Bind(&loginRequest); err != nil {
+		logger.ErrorLog("Invalid request for login/login")
 		c.AbortWithStatus(500)
 		return
 	}
 
+	tx := db.GormDB.Begin()
+
 	login := entities.Login{UserName: loginRequest.UserName, Email: loginRequest.Email, Password: loginRequest.Password}
 
-	if err := db.GormDB.Where("user_name = ? or email = ?", loginRequest.UserName, loginRequest.Email).First(&entities.Login{}).Error; err != nil {
-		db.GormDB.Create(&login)
-	} else {
-		c.JSON(400, "This user already exists. Please check your User Name and Email")
+	if err := repo.Login.Create(tx, login); err != nil {
+		c.Error(definedErrors.UserAlreadyExists)
 		return
 	}
 
-	s.SessionSet(c, "isActive", true)
+	tx.Commit()
+
+	s.SessionSet(c, "isActive", true, session)
+
+	s.SessionSave(c, session)
 
 	c.JSON(200, gin.H{
 		"isSuccess": true,
 	})
+
 }
 
 func (u *LoginController) Register(c *gin.Context) {
-	// var login Login
-	// err := json.NewDecoder(c.Body).Decode(&login)
-
-	cache.Set("furkan","ozturk", -1)
 
 	c.JSON(200, gin.H{
 		"isSuccess": true,

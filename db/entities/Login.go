@@ -5,8 +5,8 @@ import(
 )
 
 type Login struct {
-	Id       uint   
-	UserName string 
+	Id       uint   `gorm:"auto_increment"`
+	UserName string `gorm:"primaryKey"`
 	Email	 string 
 	Password string 
 	gorm.Model

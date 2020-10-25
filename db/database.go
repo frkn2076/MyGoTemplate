@@ -13,10 +13,15 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *sql.DB = initDB()
-var GormDB *gorm.DB = initGormDB()
+var DB *sql.DB
+var GormDB *gorm.DB
 
-//#region helper/unexporteds
+func init(){
+	DB = initDB()
+	GormDB = initGormDB()
+}
+
+//#region Helper
 
 func initDB() *sql.DB {
 	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db?charset=utf8");
@@ -43,16 +48,15 @@ func initGormDB() *gorm.DB{
 	//Initialize gorm with existing db connection
 	gormDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn: DB,
-	  }), &gorm.Config{})
+	  }), &gorm.Config{
+		SkipDefaultTransaction: true, //skipped to start own transactions in repositories to supply Unit of Work.
+	  })
 	
 	if err != nil {
 		logger.ErrorLog("An error occured while gorm driver is establishing: ", err.Error())
 	}
 
-	//Migrations
 	gormDB.AutoMigrate(&entities.User{}, &entities.Login{}, &entities.Localization{})
-
-	// gormDB.Callback().Create().Before("gorm:create").Register("update_created_at", updateCreated)
 
 	InitScripts(DB)
 	logger.InfoLog("Init sql script has runned")
@@ -61,5 +65,4 @@ func initGormDB() *gorm.DB{
 }
 
 
-
-//#endregion helper/unexporteds
+//#endregion

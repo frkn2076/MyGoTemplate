@@ -1,9 +1,10 @@
 package cache
 
 import (
-	"fmt"
 	"runtime/debug"
 	"time"
+
+	"app/MyGoTemplate/logger"
 
 	"github.com/coocood/freecache"
 )
@@ -14,6 +15,7 @@ var cache *freecache.Cache = loadCache()
 func loadCache() *freecache.Cache {
 	cacheSize := 100 * 1024 * 1024
 	cache := freecache.NewCache(cacheSize)
+	logger.InfoLog("Cache created with size ", cacheSize)
 
 	debug.SetGCPercent(20)
 	
@@ -26,32 +28,24 @@ func Set(key string, value string, expireDuration int){
 }
 
 func Get(key string) string {
+	//if cache has not key, value is empty string
 	value, err := cache.Get([]byte(key))
 	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(string(value))
-	}
+		logger.ErrorLog("Cache couldn't find the key ", key)
+	} 
 	return string(value)
 }
 
 func Delete(key string) {
-	affected := cache.Del([]byte(key))
-	fmt.Println("deleted key ", affected)
+	cache.Del([]byte(key))
 }
 
 func Reset(){
 	cache.Clear()
 }
 
-//Gets value and deletes it
-func Flash(key string) string {
-	defer Delete(key)
-	return Get(key)
-}
-
 func GetAvaregeAccessTime() int64 {
-	return cache.AverageAccessTime() / int64(time.Millisecond)
+	return cache.AverageAccessTime() / int64(time.Second)
 }
 
 

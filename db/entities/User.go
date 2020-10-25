@@ -17,13 +17,3 @@ type User struct {
 func (User) TableName() string {
 	return "User"
 }
-
-// func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	
-// 	return
-//   }
-  
-// func (u *User) AfterCreate(tx *gorm.DB) (err error) {
-// 	tx.Model(u).Update("created_at", time.Now())
-// 	return
-// }

@@ -1,7 +1,0 @@
-package resource
-
-
-
-func init(){
-	
-}
