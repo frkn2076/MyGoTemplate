@@ -5,7 +5,7 @@ import(
 )
 
 type Localization struct {
-	Id       uint	`gorm:"auto_increment"`
+	Id		 uint   `gorm:"uniqueIndex;autoIncrement:true"`
 	Resource string `gorm:"primaryKey"`
 	Message  string
 	Language string `gorm:"primaryKey"`
