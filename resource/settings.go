@@ -2,6 +2,7 @@ package resource
 
 import(
 	"encoding/xml"
+	"os"
 
 	"app/MyGoTemplate/cache"
 	"app/MyGoTemplate/helper"
@@ -32,7 +33,7 @@ func init() {
 func settingsCacheLoad(){
 	var root Root
 
-	helper.LoadModel("resource/settings.xml", &root)
+	helper.LoadModel(os.Getenv("SettingFilePath"), &root)
 
 	for _, item:= range root.Items{
 		cache.Set(item.Key, item.Value, -1)

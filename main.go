@@ -6,7 +6,6 @@ import (
 	_ "app/MyGoTemplate/resource"
 	"app/MyGoTemplate/router"
 	"app/MyGoTemplate/socket"
-
 )
 
 func main() {

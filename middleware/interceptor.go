@@ -52,18 +52,19 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 }
 
 func errorHandler(c *gin.Context) {
+	lang, err := s.SessionGet(c, "language")
+	if err != nil {
+		logger.ErrorLog("An error occured while using ", err.Error())
+	}
+	language := fmt.Sprintf("%v", lang)
+	
 	if(len(c.Errors) > 0){
-		lang, err := s.SessionGet(c, "language")
-		if err != nil {
-			logger.ErrorLog("An error occured while using ", err.Error())
-		}
-		language := fmt.Sprintf("%v", lang)
 		key := c.Errors[0].Error() + language
 		errorMessage := cache.Get(key)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, &response.BaseResponse{IsSuccess: false,	Message: errorMessage})
 		return
 	} else if(c.Writer.Status() < http.StatusOK || c.Writer.Status() > http.StatusIMUsed) {
-		c.AbortWithStatusJSON(c.Writer.Status(), &response.BaseResponse{IsSuccess: false,	Message: "Hizmet veremiyoruz"})
+		c.AbortWithStatusJSON(c.Writer.Status(), &response.BaseResponse{IsSuccess: false,	Message: cache.Get("GlobalErrorMessage" + language)})
 		return
 	}
 }

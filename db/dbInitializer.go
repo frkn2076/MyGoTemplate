@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"io/ioutil"
 	"strings"
+	"os"
 
 	"app/MyGoTemplate/logger"
 )
@@ -11,7 +12,7 @@ import (
 //Additional scripts like CRUD, trigger, SP etc.
 func InitScripts(db *sql.DB) {
 
-	initScript, err := ioutil.ReadFile("db/init.sql")
+	initScript, err := ioutil.ReadFile(os.Getenv("InıtSQLFilePath"))
 	if err != nil {
 		logger.ErrorLog("An error occured while reading init.sql file - InitScripts - dbInitializer.go ", err.Error())
 	}

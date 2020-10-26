@@ -10,10 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Flash messages are session values that last until read
-// When we request a flash message, it is removed from the session. To add a flash,
-// call session.AddFlash(), and to get all flashes, call session.Flashes().
-
 // store will hold all session data
 var store *sessions.CookieStore
 
@@ -89,9 +85,3 @@ func init() {
 
 	store = cookieStore
 }
-
-//#region Helper
-
-
-
-//#endregion

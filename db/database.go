@@ -24,7 +24,7 @@ func init(){
 //#region Helper
 
 func initDB() *sql.DB {
-	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/db?parseTime=true");
+	db, err := sql.Open("mysql", os.Getenv("SQLConnectionURL"));
 	
 	if err != nil {
 		logger.ErrorLog("An error occured while database connection is establishing ", err.Error())

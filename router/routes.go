@@ -1,6 +1,8 @@
 package router
 
 import (
+	"os"
+
 	"app/MyGoTemplate/middleware"
 	"app/MyGoTemplate/controllers"
 	"app/MyGoTemplate/socket"
@@ -22,8 +24,8 @@ func SetupRouter() *gin.Engine {
 		grp1.POST("register", user.Register)
 	}
 
-	//User interface to demo
-	router.LoadHTMLFiles("socket/index.html")
+	//User interface to demonstrate
+	router.LoadHTMLFiles(os.Getenv("SocketDemonstrateHTMLPath"))
 
 	router.GET("/room/:roomId", func(c *gin.Context) {
 		c.HTML(200, "index.html", nil)

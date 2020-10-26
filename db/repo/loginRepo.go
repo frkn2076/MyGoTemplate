@@ -2,6 +2,7 @@ package repo
 
 import(
 	"app/MyGoTemplate/db/entities"
+	"app/MyGoTemplate/logger"
 
 	"gorm.io/gorm"
 )

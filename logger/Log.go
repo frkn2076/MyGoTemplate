@@ -39,7 +39,7 @@ func TransactionLog(logText ...interface{}) {
 func initLogger(folderName string) *log.Logger {
 	dt := time.Now()
 	today := dt.Format("02-Jan-2006")
-	fileName := fmt.Sprintf("logger/%s/%s.log", folderName, today)
+	fileName := fmt.Sprintf(os.Getenv("LoggerFilePath"), folderName, today)
 	
 	//check log file created before
 	_, err := os.Stat(fileName)
