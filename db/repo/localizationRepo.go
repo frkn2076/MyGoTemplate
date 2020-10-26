@@ -18,7 +18,7 @@ type LocalizationRepo struct{}
 
 func (u *LocalizationRepo) Create(db *gorm.DB, localization entities.Localization) (error) {
 	if err := db.Create(&localization).Error; err != nil {
-		logger.ErrorLog("An error occured while creating localization - Create - localizationRepo.go", err.Error())
+		logger.ErrorLog("An error occured while creating localization - Create - localizationRepo.go", localization, err.Error())
 		return err
 	}
 	logger.TransactionLog("Created", localization)
