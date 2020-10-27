@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "app/MyGoTemplate/environments"
 	_ "app/MyGoTemplate/db"
 	_ "app/MyGoTemplate/logger"
 	_ "app/MyGoTemplate/resource"

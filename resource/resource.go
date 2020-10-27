@@ -13,7 +13,7 @@ func init(){
 		logger.ErrorLog("An error occured while loading localizations to cache: ", err.Error())
 	} else {
 		for _, localization := range localizations {
-			cache.Set(localization.Resource + localization.Language, localization.Message, -1)
+			cache.Set(localization.Resource + localization.Language, localization.Message, 0)
 		}
 	}
 }

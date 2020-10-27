@@ -5,6 +5,7 @@ import(
 	"io/ioutil"
 	"net/http"
 	"fmt"
+	"os"
 
 	"app/MyGoTemplate/logger"
 	"app/MyGoTemplate/controllers/models/response"
@@ -45,22 +46,26 @@ func ServiceLogMiddleware() gin.HandlerFunc {
 		errorHandler(c)
 
 		responseBody := bodyLogWriter.body.String()
-		logger.ServiceLog("Response: ", string(responseBody))
+		logger.ServiceLog("Response: ", c.Request.RequestURI, string(responseBody))
 
 		//#endregion
     }
 }
 
 func errorHandler(c *gin.Context) {
-	lang, err := s.SessionGet(c, "language")
+	session, err := s.Store.Get(c.Request, os.Getenv("SessionCookieName"))
 	if err != nil {
-		logger.ErrorLog("An error occured while using ", err.Error())
+		logger.ErrorLog("An error occured while getting session - errorHandler - interceptor.go", err.Error())
 	}
+
+	lang := session.Values["language"]
+
 	language := fmt.Sprintf("%v", lang)
 	
 	if(len(c.Errors) > 0){
 		key := c.Errors[0].Error() + language
 		errorMessage := cache.Get(key)
+		logger.ServiceLog(c.Request.RequestURI, errorMessage)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, &response.BaseResponse{IsSuccess: false,	Message: errorMessage})
 		return
 	} else if(c.Writer.Status() < http.StatusOK || c.Writer.Status() > http.StatusIMUsed) {
