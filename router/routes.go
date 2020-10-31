@@ -22,6 +22,7 @@ func SetupRouter() *gin.Engine {
 	{
 		grp1.POST("login", user.Login)
 		grp1.POST("register", user.Register)
+		grp1.POST("registerValidation", user.RegisterValidation)
 	}
 
 	//User interface to demonstrate

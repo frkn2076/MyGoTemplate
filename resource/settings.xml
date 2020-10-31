@@ -1,4 +1,3 @@
 <Root>
-    <Item Key="cookie" Value="cookieName" />
-    <Item Key="cookie2" Value="cookieName1" />
+    <Item Key="isMailValidatonActive" Value="true" />
 </Root>
