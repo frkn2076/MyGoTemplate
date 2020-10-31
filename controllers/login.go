@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"math/rand"
 	"os"
 
 	"app/MyGoTemplate/controllers/models/request"
@@ -8,10 +9,11 @@ import (
 	"app/MyGoTemplate/db"
 	"app/MyGoTemplate/db/entities"
 	"app/MyGoTemplate/db/repo"
-	s "app/MyGoTemplate/session"
-	"app/MyGoTemplate/logger"
 	"app/MyGoTemplate/definedErrors"
 	"app/MyGoTemplate/helper"
+	"app/MyGoTemplate/logger"
+	"app/MyGoTemplate/resource"
+	s "app/MyGoTemplate/session"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -58,26 +60,80 @@ func (u *LoginController) Register(c *gin.Context) {
 		return
 	}
 
-	tx := db.GormDB.Begin()
-
 	login := entities.Login{UserName: loginRequest.UserName, Email: loginRequest.Email, Password: string(hashedPassword)}
 
-	if err := repo.Login.Create(tx, login); err != nil {
-		c.Error(definedErrors.UserAlreadyExists)
-		return
+	isMailValidationActive := resource.GetValue("isMailValidatonActive") == "true"
+
+	if isMailValidationActive {
+		key := rand.Intn(899999) + 100000
+		
+		session.AddFlash("name", login.UserName) 
+		session.AddFlash("email", login.Email) 
+		session.AddFlash("hashedPassword", string(hashedPassword)) 
+		session.AddFlash("emailKey", string(key))
+
+		helper.SendMail("ozturkfurkan1994@hotmail.com", string(key), session.Values["language"].(string))
+	} else {
+		tx := db.GormDB.Begin()
+
+		if err := repo.Login.Create(tx, login); err != nil {
+			c.Error(definedErrors.UserAlreadyExists)
+			return
+		}
+
+		tx.Commit()
+
+		session.Values["isActive"] = true
 	}
-
-	tx.Commit()
-
-	session.Values["isActive"] = true
 
 	if err := session.Save(c.Request, c.Writer); err != nil {
 		logger.ErrorLog("An error occured while saving session - Register - login.go", err.Error())
 		c.AbortWithStatus(500)
 		return
 	}
-	
+
 	c.JSON(200, response.Success)
+}
+
+func (u *LoginController) RegisterValidation(c *gin.Context) {
+	session, err := s.Store.Get(c.Request, os.Getenv("SessionCookieName"))
+	if err != nil {
+		logger.ErrorLog("An error occured while session get - Register - login.go", err.Error())
+		c.AbortWithStatus(500)
+		return
+	}
+
+	var registerValidationRequest request.RegisterValidationRequest
+	if err := c.Bind(&registerValidationRequest); err != nil {
+		logger.ErrorLog("Invalid request - RegisterValidation - login.go", err.Error())
+		c.AbortWithStatus(500)
+		return
+	}
+
+	emailKey := session.Flashes("emailKey")[0]
+	
+	if emailKey == registerValidationRequest.Key {
+		login := entities.Login{UserName: session.Flashes("name")[0].(string), Email: session.Flashes("email")[0].(string), Password: session.Flashes("hashedPassword")[0].(string)}
+
+		tx := db.GormDB.Begin()
+
+		if err := repo.Login.Create(tx, login); err != nil {
+			session.AddFlash("name", login.UserName) 
+			session.AddFlash("email", login.Email) 
+			session.AddFlash("hashedPassword", login.Password)  
+			session.AddFlash("emailKey", emailKey.(string))
+			c.Error(definedErrors.UserAlreadyExists)
+			return
+		}
+
+		tx.Commit()
+
+		session.Values["isActive"] = true
+
+		c.JSON(200, response.Success)
+	}
+	
+
 }
 
 func (u *LoginController) Login(c *gin.Context) {
