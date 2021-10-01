@@ -1,68 +1,140 @@
 package db
 
 import (
-	"os"
-	"time"
 	"context"
 	"database/sql"
+	"io/ioutil"
+	"os"
+	"strings"
+	"time"
 
-	"app/MyGoTemplate/logger"
-	"app/MyGoTemplate/db/entities"
-	
-	"gorm.io/driver/mysql"
+	"app/MyGoTemplate/infra/constant"
+	"app/MyGoTemplate/infra/db/localization"
+	"app/MyGoTemplate/infra/db/login"
+	"app/MyGoTemplate/infra/logger"
+
+	_ "github.com/lib/pq"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var DB *sql.DB
+var PostgreDB *sql.DB
+var MongoDB *mongo.Database
 var GormDB *gorm.DB
 
-func init(){
-	DB = initDB()
-	GormDB = initGormDB()
+func ConnectDatabases() {
+	PostgreDB = initPostgreDB()
+	MongoDB = initMongoDB()
+	GormDB = initGorm()
 }
 
-//#region Helper
+func MigrateTables() {
+	GormDB.AutoMigrate(&login.Entity{}, &localization.Entity{})
+}
 
-func initDB() *sql.DB {
-	db, err := sql.Open("mysql", os.Getenv("SQLConnectionURL"));
-	
+func InitScripts() {
+	initScriptPath := os.Getenv("InitSQLFilePath")
+	initScriptFile, err := ioutil.ReadFile(initScriptPath)
 	if err != nil {
-		logger.ErrorLog("An error occured while database connection is establishing ", err.Error())
+		logger.ErrorLog("An error occured while reading init.sql file - dbInitializer.go - Error:", err.Error())
+	}
+	initScript := string(initScriptFile)
+
+	transaction, err := PostgreDB.Begin()
+	if err != nil {
+		logger.ErrorLog("An error occured while beginning transaction - dbInitializer.go - Error:", err.Error())
+	} else {
+		logger.TransactionLog("Transaction began")
+	}
+
+	defer func() {
+		err := transaction.Rollback()
+		if err != nil {
+			logger.ErrorLog("An error occured while rollbacking transaction - dbInitializer.go - Error:", err.Error())
+		} else {
+			logger.TransactionLog("Transaction rollback")
+		}
+	}()
+
+	for _, statement := range strings.Split(initScript, constant.NextLine) {
+		statement := strings.TrimSpace(statement)
+		if statement == constant.EmptyString {
+			continue
+		}
+		if _, err := transaction.Exec(statement); err != nil {
+			logger.ErrorLog("An error occured while executing statements - dbInitializer.go - Error:", err.Error())
+		} else {
+			logger.TransactionLog(statement)
+		}
+	}
+
+	err = transaction.Commit()
+	if err != nil {
+		logger.ErrorLog("An error occured while committing transaction - dbInitializer.go - Error:", err.Error())
+	} else {
+		logger.TransactionLog("Transaction committed")
+	}
+
+	logger.InfoLog("Init sql script has runned")
+}
+
+func initPostgreDB() *sql.DB {
+	connection := os.Getenv("PGSQLConnection")
+	db, err := sql.Open("postgres", connection)
+	if err != nil {
+		logger.ErrorLog("An error occured while postgre connection is establishing. - Error:", err.Error())
 		os.Exit(0)
 	}
 
 	//Ping for 2 seconds
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 2*time.Second)
-    defer cancelfunc()
-    if err = db.PingContext(ctx); err != nil {
-		logger.ErrorLog("An error occured while ping: ", err.Error())
+	defer cancelfunc()
+	if err = db.PingContext(ctx); err != nil {
+		logger.ErrorLog("An error occured while postgre ping:", err.Error())
 	}
-
-	logger.InfoLog("Database connection is opened")
-	
+	logger.InfoLog("Postgre database connection is opened")
 	return db
 }
 
-func initGormDB() *gorm.DB{
-
-	//Initialize gorm with existing db connection
-	gormDB, err := gorm.Open(mysql.New(mysql.Config{
-		Conn: DB,
-	  }), &gorm.Config{
-		SkipDefaultTransaction: true, //skipped to start own transactions in repositories to supply Unit of Work.
-	  })
-	
+func initMongoDB() *mongo.Database {
+	connection := os.Getenv("MongoConnection")
+	clientOptions := options.Client().ApplyURI(connection)
+	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
-		logger.ErrorLog("An error occured while gorm driver is establishing: ", err.Error())
+		logger.ErrorLog("An error occured while mongo connection is establishing ", err.Error())
+		os.Exit(0)
 	}
 
-	gormDB.AutoMigrate(&entities.User{}, &entities.Login{}, &entities.Localization{})
+	//Ping for 2 seconds
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancelfunc()
 
-	InitScripts(DB)
-	logger.InfoLog("Init sql script has runned")
+	if err = client.Connect(ctx); err != nil {
+		logger.ErrorLog("An error occured while mongo ping:", err.Error())
+	}
+	logger.InfoLog("Mongo database connection is opened")
+
+	logDB := client.Database("LogDB")
+	return logDB
+}
+
+func initGorm() *gorm.DB {
+
+	gormDB, err := gorm.Open(
+		postgres.New(postgres.Config{
+			Conn: PostgreDB, // Initialize gorm with the existing db connection
+		}),
+		&gorm.Config{
+			Logger:                 logger.QueryLogger,
+			SkipDefaultTransaction: true,
+		},
+	)
+	if err != nil {
+		logger.ErrorLog("An error occured while gorm driver is establishing: ", err.Error())
+		os.Exit(0)
+	}
 
 	return gormDB
 }
-
-
-//#endregion

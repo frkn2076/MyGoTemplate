@@ -5,7 +5,7 @@ import(
 	"io/ioutil"
 	"encoding/xml"
 
-	"app/MyGoTemplate/logger"
+	"app/MyGoTemplate/infra/logger"
 )
 
 func LoadModel(path string, model interface{}) {

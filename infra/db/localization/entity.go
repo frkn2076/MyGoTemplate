@@ -1,17 +1,17 @@
-package entities
+package localization
 
-import(
+import (
 	"gorm.io/gorm"
 )
 
-type Localization struct {
-	Id		 uint   `gorm:"uniqueIndex;autoIncrement:true"`
+type Entity struct {
+	Id       uint   `gorm:"uniqueIndex;autoIncrement:true"`
 	Resource string `gorm:"primaryKey"`
 	Message  string
 	Language string `gorm:"primaryKey"`
 	gorm.Model
 }
 
-func (Localization) TableName() string {
+func (Entity) TableName() string {
 	return "Localization"
 }

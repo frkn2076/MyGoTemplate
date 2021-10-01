@@ -8,8 +8,8 @@ import (
 	// "bytes"
 	"strings"
 
-	"app/MyGoTemplate/logger"
-	"app/MyGoTemplate/cache"
+	"app/MyGoTemplate/infra/logger"
+	"app/MyGoTemplate/infra/cache"
   
 	gomail "gopkg.in/mail.v2"
   )

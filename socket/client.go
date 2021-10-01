@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"app/MyGoTemplate/logger"
+	"app/MyGoTemplate/infra/logger"
 	
 	"github.com/gorilla/websocket"
 )

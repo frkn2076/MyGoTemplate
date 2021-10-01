@@ -4,13 +4,12 @@ import (
 	"runtime/debug"
 	"time"
 
-	"app/MyGoTemplate/logger"
+	"app/MyGoTemplate/infra/logger"
 
 	"github.com/coocood/freecache"
 )
 
 var cache *freecache.Cache = loadCache()
-
 
 func loadCache() *freecache.Cache {
 	cacheSize := 100 * 1024 * 1024

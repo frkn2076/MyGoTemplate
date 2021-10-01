@@ -1,27 +1,31 @@
-package controllers
+package login
 
 import (
 	"math/rand"
 	"os"
 
-	"app/MyGoTemplate/controllers/models/request"
-	"app/MyGoTemplate/controllers/models/response"
-	"app/MyGoTemplate/db"
-	"app/MyGoTemplate/db/entities"
-	"app/MyGoTemplate/db/repo"
-	"app/MyGoTemplate/definedErrors"
-	"app/MyGoTemplate/helper"
-	"app/MyGoTemplate/logger"
-	"app/MyGoTemplate/resource"
-	s "app/MyGoTemplate/session"
+	"app/MyGoTemplate/infra/customeerror"
+	"app/MyGoTemplate/api"
+	"app/MyGoTemplate/infra/db"
+	"app/MyGoTemplate/infra/db/login"
+	"app/MyGoTemplate/infra/helper"
+	"app/MyGoTemplate/infra/logger"
+	"app/MyGoTemplate/infra/resource"
+	s "app/MyGoTemplate/infra/session"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type LoginController struct{}
+func NewController() *Controller {
+	return &Controller{LoginRepository: login.NewRepository()}
+}
 
-func (u *LoginController) Register(c *gin.Context) {
+type Controller struct{
+	LoginRepository *login.Repository
+}
+
+func (u *Controller) Register(c *gin.Context) {
 
 	session, err := s.Store.Get(c.Request, os.Getenv("SessionCookieName"))
 	if err != nil {
@@ -34,7 +38,7 @@ func (u *LoginController) Register(c *gin.Context) {
 
 	// session, _ := s.SessionSet(c, "version", "1.0.0", nil)
 
-	var loginRequest request.LoginRequest
+	var loginRequest LoginRequest
 	if err := c.Bind(&loginRequest); err != nil {
 		logger.ErrorLog("Invalid request - Register - login.go", err.Error())
 		c.AbortWithStatus(500)
@@ -43,13 +47,13 @@ func (u *LoginController) Register(c *gin.Context) {
 
 	if !helper.IsEmailValid(loginRequest.Email) {
 		logger.ErrorLog("Invalid mail", loginRequest.Email)
-		c.Error(definedErrors.NotAValidEmail)
+		c.Error(customeerror.NotAValidEmail)
 		return
 	}
 
 	if len(loginRequest.Password) < 6 {
 		logger.ErrorLog("Short password - Login - login.go")
-		c.Error(definedErrors.ShortPassword)
+		c.Error(customeerror.ShortPassword)
 		return
 	}
 
@@ -60,7 +64,7 @@ func (u *LoginController) Register(c *gin.Context) {
 		return
 	}
 
-	login := entities.Login{UserName: loginRequest.UserName, Email: loginRequest.Email, Password: string(hashedPassword)}
+	login := login.Entity{UserName: loginRequest.UserName, Email: loginRequest.Email, Password: string(hashedPassword)}
 
 	isMailValidationActive := resource.GetValue("isMailValidatonActive") == "true"
 
@@ -76,8 +80,8 @@ func (u *LoginController) Register(c *gin.Context) {
 	} else {
 		tx := db.GormDB.Begin()
 
-		if err := repo.Login.Create(tx, login); err != nil {
-			c.Error(definedErrors.UserAlreadyExists)
+		if err := u.LoginRepository.Create(tx, login); err != nil {
+			c.Error(customeerror.UserAlreadyExists)
 			return
 		}
 
@@ -92,10 +96,10 @@ func (u *LoginController) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, response.Success)
+	c.JSON(200, api.Success)
 }
 
-func (u *LoginController) RegisterValidation(c *gin.Context) {
+func (u *Controller) RegisterValidation(c *gin.Context) {
 	session, err := s.Store.Get(c.Request, os.Getenv("SessionCookieName"))
 	if err != nil {
 		logger.ErrorLog("An error occured while session get - Register - login.go", err.Error())
@@ -103,7 +107,7 @@ func (u *LoginController) RegisterValidation(c *gin.Context) {
 		return
 	}
 
-	var registerValidationRequest request.RegisterValidationRequest
+	var registerValidationRequest RegisterValidationRequest
 	if err := c.Bind(&registerValidationRequest); err != nil {
 		logger.ErrorLog("Invalid request - RegisterValidation - login.go", err.Error())
 		c.AbortWithStatus(500)
@@ -113,16 +117,16 @@ func (u *LoginController) RegisterValidation(c *gin.Context) {
 	emailKey := session.Flashes("emailKey")[0]
 	
 	if emailKey == registerValidationRequest.Key {
-		login := entities.Login{UserName: session.Flashes("name")[0].(string), Email: session.Flashes("email")[0].(string), Password: session.Flashes("hashedPassword")[0].(string)}
+		login := login.Entity{UserName: session.Flashes("name")[0].(string), Email: session.Flashes("email")[0].(string), Password: session.Flashes("hashedPassword")[0].(string)}
 
 		tx := db.GormDB.Begin()
 
-		if err := repo.Login.Create(tx, login); err != nil {
+		if err := u.LoginRepository.Create(tx, login); err != nil {
 			session.AddFlash("name", login.UserName) 
 			session.AddFlash("email", login.Email) 
 			session.AddFlash("hashedPassword", login.Password)  
 			session.AddFlash("emailKey", emailKey.(string))
-			c.Error(definedErrors.UserAlreadyExists)
+			c.Error(customeerror.UserAlreadyExists)
 			return
 		}
 
@@ -130,13 +134,11 @@ func (u *LoginController) RegisterValidation(c *gin.Context) {
 
 		session.Values["isActive"] = true
 
-		c.JSON(200, response.Success)
+		c.JSON(200, api.Success)
 	}
-	
-
 }
 
-func (u *LoginController) Login(c *gin.Context) {
+func (u *Controller) Login(c *gin.Context) {
 
 	session, err := s.Store.Get(c.Request, os.Getenv("SessionCookieName"))
 	if err != nil {
@@ -145,7 +147,7 @@ func (u *LoginController) Login(c *gin.Context) {
 		return
 	}
 
-	var loginRequest request.LoginRequest
+	var loginRequest LoginRequest
 	if err := c.Bind(&loginRequest); err != nil {
 		logger.ErrorLog("Invalid request - Login - login.go", err.Error())
 		c.AbortWithStatus(500)
@@ -154,15 +156,15 @@ func (u *LoginController) Login(c *gin.Context) {
 
 	tx := db.GormDB.Begin()
 
-	login, err := repo.Login.First(tx, loginRequest.UserName)
+	login, err := u.LoginRepository.First(tx, loginRequest.UserName)
 	if err != nil {
-		c.Error(definedErrors.UserNotFound)
+		c.Error(customeerror.UserNotFound)
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(login.Password), []byte(loginRequest.Password)); err != nil {
 		logger.ErrorLog(err)
-		c.Error(definedErrors.WrongPassword)
+		c.Error(customeerror.WrongPassword)
 		return
 	}
 

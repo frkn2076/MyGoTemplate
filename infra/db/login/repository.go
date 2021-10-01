@@ -1,22 +1,18 @@
-package repo
+package login
 
-import(
-	"app/MyGoTemplate/db/entities"
-	"app/MyGoTemplate/logger"
+import (
+	"app/MyGoTemplate/infra/logger"
 
 	"gorm.io/gorm"
 )
 
-var Login *LoginRepo
-
-func init() {
-	//to use singleton instance
-	Login = new(LoginRepo)
+func NewRepository() *Repository {
+	return new(Repository)
 }
 
-type LoginRepo struct{}
+type Repository struct{}
 
-func (u *LoginRepo) Create(db *gorm.DB, login entities.Login) (err error) {
+func (u *Repository) Create(db *gorm.DB, login Entity) (err error) {
 	if err := db.Create(&login).Error; err != nil {
 		logger.ErrorLog("An error occured while creating login - Create - loginRepo.go ", login, err.Error())
 		return err
@@ -25,8 +21,8 @@ func (u *LoginRepo) Create(db *gorm.DB, login entities.Login) (err error) {
 	return nil
 }
 
-func (u *LoginRepo) First(db *gorm.DB, userName string) (entities.Login, error) {
-	var login entities.Login
+func (u *Repository) First(db *gorm.DB, userName string) (Entity, error) {
+	var login Entity
 	if err := db.Where("user_name = ? ", userName).First(&login).Error; err != nil {
 		logger.ErrorLog("An error occured while getting first login - First - loginRepo.go ", "user_name = ? ", userName, err.Error())
 		return login, err

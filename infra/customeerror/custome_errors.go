@@ -1,6 +1,6 @@
-package definedErrors
+package customeerror
 
-import(
+import (
 	"errors"
 )
 

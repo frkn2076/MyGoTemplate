@@ -4,8 +4,8 @@ import(
 	"encoding/xml"
 	"os"
 
-	"app/MyGoTemplate/cache"
-	"app/MyGoTemplate/helper"
+	"app/MyGoTemplate/infra/cache"
+	"app/MyGoTemplate/infra/helper"
 )
 
 var isFirstCall bool = true

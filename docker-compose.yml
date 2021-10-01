@@ -1,0 +1,53 @@
+version: '3.4'
+
+services:
+  mygotemplate:
+    image: 'mygotemplate'
+    container_name: 'mygotemplate-container'
+    build: .
+    command: go run main.go ${ENV}
+    ports:
+      - '5000:5000'
+    depends_on:
+      - postgredb
+      - nosqldb
+    restart: always
+    networks:
+      - mygotemplate-network
+
+  postgredb:
+    image: 'postgres:13-alpine'
+    container_name: 'postgredb-container'
+    environment:
+      - POSTGRES_USER=uSeR1
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=SampleDB
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgredb-volume:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - mygotemplate-network
+
+  nosqldb:
+    image: 'mongo'
+    container_name: 'nosqldb-container'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=uSeRrr
+      - MONGO_INITDB_ROOT_PASSWORD=PassWorD
+    ports:
+      - '27017:27017'
+    volumes:
+      - nosqldb-volume:/data/db
+    restart: always
+    networks:
+      - mygotemplate-network
+      
+volumes:
+  postgredb-volume:
+  nosqldb-volume:
+
+networks:
+  mygotemplate-network:
+    driver: bridge

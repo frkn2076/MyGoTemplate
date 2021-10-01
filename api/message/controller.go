@@ -1,4 +1,4 @@
-package controllers
+package message
 
 // import (
 // "app/MyGoTemplate/logger"

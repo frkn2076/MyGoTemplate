@@ -1,10 +1,10 @@
 package main
 
 import (
-	_ "app/MyGoTemplate/environments"
-	_ "app/MyGoTemplate/db"
-	_ "app/MyGoTemplate/logger"
-	_ "app/MyGoTemplate/resource"
+	_ "app/MyGoTemplate/infra/environments"
+	_ "app/MyGoTemplate/infra/db"
+	_ "app/MyGoTemplate/infra/logger"
+	_ "app/MyGoTemplate/infra/resource"
 	"app/MyGoTemplate/router"
 	"app/MyGoTemplate/socket"
 )

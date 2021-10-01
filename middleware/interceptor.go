@@ -7,10 +7,10 @@ import(
 	"fmt"
 	"os"
 
-	"app/MyGoTemplate/logger"
-	"app/MyGoTemplate/controllers/models/response"
-	"app/MyGoTemplate/cache"
-	s "app/MyGoTemplate/session"
+	"app/MyGoTemplate/infra/logger"
+	"app/MyGoTemplate/api"
+	"app/MyGoTemplate/infra/cache"
+	s "app/MyGoTemplate/infra/session"
 
 	"github.com/gin-gonic/gin"
 )
@@ -66,10 +66,10 @@ func errorHandler(c *gin.Context) {
 		key := c.Errors[0].Error() + language
 		errorMessage := cache.Get(key)
 		logger.ServiceLog(c.Request.RequestURI, errorMessage)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, &response.BaseResponse{IsSuccess: false,	Message: errorMessage})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, &api.BaseResponse{IsSuccess: false,	Message: errorMessage})
 		return
 	} else if(c.Writer.Status() < http.StatusOK || c.Writer.Status() > http.StatusIMUsed) {
-		c.AbortWithStatusJSON(c.Writer.Status(), &response.BaseResponse{IsSuccess: false,	Message: cache.Get("GlobalErrorMessage" + language)})
+		c.AbortWithStatusJSON(c.Writer.Status(), &api.BaseResponse{IsSuccess: false,	Message: cache.Get("GlobalErrorMessage" + language)})
 		return
 	}
 }
