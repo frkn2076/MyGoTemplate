@@ -5,7 +5,7 @@ services:
     image: 'mygotemplate'
     container_name: 'mygotemplate-container'
     build: .
-    command: go run main.go ${ENV}
+    command: go run main.go
     ports:
       - '5000:5000'
     depends_on:

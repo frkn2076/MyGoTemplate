@@ -1,12 +1,12 @@
 package environments
 
-import(
+import (
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
-func init(){
+func Load() {
 	env := os.Getenv("ENV")
 	if env == "UAT" {
 		godotenv.Load("infra/environments/UAT.env")

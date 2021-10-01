@@ -121,7 +121,6 @@ func initMongoDB() *mongo.Database {
 }
 
 func initGorm() *gorm.DB {
-
 	gormDB, err := gorm.Open(
 		postgres.New(postgres.Config{
 			Conn: PostgreDB, // Initialize gorm with the existing db connection

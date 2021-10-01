@@ -4,8 +4,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io/ioutil"
-	// "html/template"
-	// "bytes"
 	"strings"
 
 	"app/MyGoTemplate/infra/logger"
